@@ -1,0 +1,16 @@
+[http]
+  [http.routers]
+    [http.routers.pve]
+      entryPoints = ["https"]
+      rule = "Host(`pve.{{env "DOMAIN_NAME_LOCAL"}}`)"
+      service = "pve"
+    
+    [http.routers.homelab]
+      entryPoints = ["https"]
+      rule = "Host(`homelab.{{env "DOMAIN_NAME_LOCAL"}}`)"
+      service = "pve"
+
+  [http.services]
+    [http.services.pve.loadBalancer]
+      [[http.services.pve.loadBalancer.servers]]
+        url = "https://192.168.1.106:8006"

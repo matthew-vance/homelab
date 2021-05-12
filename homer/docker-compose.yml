@@ -1,0 +1,21 @@
+version: "3"
+services:
+  homer:
+    image: b4bz/homer:latest
+    environment:
+      - UID=${USER_ID}
+      - GID=${GROUP_ID}
+    networks:
+      - proxy
+    volumes:
+      - ./assets:/www/assets
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homer.entrypoints=https"
+      - "traefik.http.routers.homer.rule=Host(`homer.${DOMAIN_NAME_LOCAL}`)"
+      - "traefik.http.services.homer.loadbalancer.server.port=8080"
+    restart: unless-stopped
+
+networks:
+  proxy:
+    external: true

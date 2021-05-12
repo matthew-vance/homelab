@@ -1,0 +1,44 @@
+version: "3"
+services:
+  bookstack:
+    image: ghcr.io/linuxserver/bookstack
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - APP_URL=https://bookstack.${DOMAIN_NAME_LOCAL}
+      - DB_HOST=bookstack_db
+      - DB_USER=${BOOKSTACK_DB_USER}
+      - DB_PASS=${BOOKSTACK_DB_PASS}
+      - DB_DATABASE=bookstackapp
+    networks:
+      - default
+      - proxy
+    volumes:
+      - ./app:/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bookstack.entrypoints=https"
+      - "traefik.http.routers.bookstack.rule=Host(`bookstack.${DOMAIN_NAME_LOCAL}`)"
+      - "traefik.http.routers.bookstack.tls=true"
+      - "traefik.http.services.bookstack.loadbalancer.server.port=80"
+    restart: unless-stopped
+    depends_on:
+      - bookstack_db
+
+  bookstack_db:
+    image: ghcr.io/linuxserver/mariadb
+    environment:
+      - PUID=${USER_ID}
+      - PGID=${GROUP_ID}
+      - MYSQL_ROOT_PASSWORD=${BOOKSTACK_DB_PASS}
+      - TZ=${TIME_ZONE}
+      - MYSQL_DATABASE=bookstackapp
+      - MYSQL_USER=${BOOKSTACK_DB_USER}
+      - MYSQL_PASSWORD=${BOOKSTACK_DB_PASS}
+    volumes:
+      - ./mariadb:/config
+    restart: unless-stopped
+
+networks:
+  proxy:
+    external: true

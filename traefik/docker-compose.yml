@@ -1,0 +1,29 @@
+version: "3"
+services:
+  traefik:
+    image: traefik:latest
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - proxy
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.toml:/traefik.toml:ro
+      - ./dynamic-config:/dynamic-config
+      - ./acme.json:/acme.json
+    environment:
+      - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
+      - CF_API_KEY=${CLOUDFLARE_API_KEY}
+      - DOMAIN_NAME_LOCAL
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=https"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_NAME_LOCAL}`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+    restart: unless-stopped
+
+networks:
+  proxy:
+    external: true

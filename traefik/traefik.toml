@@ -1,0 +1,36 @@
+[global]
+  checkNewVersion = true
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+    [entryPoints.http.http.redirections.entryPoint]
+      to = "https"
+      scheme = "https"
+
+    [entryPoints.https]
+      address = ":443"
+      [entryPoints.https.http.tls]
+        certResolver = "cloudflare"
+        [[entryPoints.https.http.tls.domains]]
+          main = "local.vancehome.xyz"
+          sans = ["*.local.vancehome.xyz"]
+
+[serversTransport]
+  insecureSkipVerify = true
+
+[api]
+
+[providers.docker]
+  endpoint = "unix:///var/run/docker.sock"
+  exposedByDefault = false    
+
+[providers.file]
+  directory = "/dynamic-config"
+
+[certificatesResolvers.cloudflare.acme]
+  email = "mavance44@gmail.com"
+  storage = "acme.json"
+  [certificatesResolvers.cloudflare.acme.dnsChallenge]
+    provider = "cloudflare"
+    resolvers = ["1.1.1.1:53", "1.0.0.1:53"]

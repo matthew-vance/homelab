@@ -3,6 +3,11 @@ services:
   gitea:
     image: gitea/gitea:latest
     environment:
+      - DOMAIN=gitea.${DOMAIN_NAME_LOCAL}
+      - ROOT_URL=https://gitea.${DOMAIN_NAME_LOCAL}
+      - SSH_DOMAIN=gitea.${DOMAIN_NAME_LOCAL}
+      - SSH_PORT=2222
+      - SSH_LISTEN_PORT=22
       - USER_UID=${USER_ID}
       - USER_GID=${GROUP_ID}
       - GITEA__database__DB_TYPE=postgres
@@ -23,6 +28,9 @@ services:
       - "traefik.http.routers.gitea.entrypoints=https"
       - "traefik.http.routers.gitea.rule=Host(`gitea.${DOMAIN_NAME_LOCAL}`)"
       - "traefik.http.services.gitea.loadbalancer.server.port=3000"
+      - "traefik.tcp.routers.gitea-ssh.entrypoints=ssh"
+      - "traefik.tcp.routers.gitea-ssh.rule=HostSNI(`*`)"
+      - "traefik.tcp.services.gitea-ssh.loadbalancer.server.port=22"
     depends_on:
       - gitea_db
 

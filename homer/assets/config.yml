@@ -129,3 +129,8 @@ services:
         url: "https://pve.local.vancehome.xyz"
         icon: "fas fa-server"
         target: "_blank"
+      - name: "Gitea"
+        subtitle: "Git service"
+        url: "https://gitea.local.vancehome.xyz"
+        icon: "fab fa-git-alt"
+        target: "_blank"

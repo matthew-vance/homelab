@@ -16,6 +16,9 @@
           main = "local.vancehome.xyz"
           sans = ["*.local.vancehome.xyz"]
 
+    [entryPoints.ssh]
+      address = ":2222"
+
 [serversTransport]
   insecureSkipVerify = true
 

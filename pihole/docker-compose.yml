@@ -7,7 +7,7 @@ services:
       - "53:53/udp"
     environment:
       TZ: "America/New_York"
-      WEBPASSWORD: "pihole"
+      WEBPASSWORD: ${PIHOLE_PASS}
     volumes:
       - "./etc-pihole/:/etc/pihole/"
       - "./etc-dnsmasq.d/:/etc/dnsmasq.d/"

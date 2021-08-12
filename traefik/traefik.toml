@@ -16,9 +16,6 @@
           main = "local.vancehome.xyz"
           sans = ["*.local.vancehome.xyz"]
 
-    [entryPoints.ssh]
-      address = ":2222"
-
 [serversTransport]
   insecureSkipVerify = true
 
@@ -26,13 +23,14 @@
 
 [providers.docker]
   endpoint = "unix:///var/run/docker.sock"
-  exposedByDefault = false    
+  exposedByDefault = false
+  network = "proxy" 
 
 [providers.file]
   directory = "/dynamic-config"
 
 [certificatesResolvers.cloudflare.acme]
-  email = "mavance44@gmail.com"
+  email = "{{env `CLOUDFLARE_EMAIL`}}"
   storage = "acme.json"
   [certificatesResolvers.cloudflare.acme.dnsChallenge]
     provider = "cloudflare"

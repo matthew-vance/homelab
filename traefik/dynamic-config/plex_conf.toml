@@ -1,0 +1,11 @@
+[http]
+  [http.routers]
+    [http.routers.plex]
+      entryPoints = ["https"]
+      rule = "Host(`plex.{{env "DOMAIN_NAME_LOCAL"}}`)"
+      service = "plex"
+
+  [http.services]
+    [http.services.plex.loadBalancer]
+      [[http.services.plex.loadBalancer.servers]]
+        url = "https://192.168.1.109:32400"
